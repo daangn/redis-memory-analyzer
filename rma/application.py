@@ -14,6 +14,7 @@ from collections import defaultdict
 from redis.exceptions import ResponseError
 
 def ptransform(nm):
+    nm = nm.replace("/", ":")
     if nm.startswith('celery-task-meta'):
         spl = nm.split('-')
         rt = '-'.join(spl[0:3])+':'+'-'.join(spl[3:])
@@ -29,6 +30,8 @@ def ptransform(nm):
     elif nm.endswith('_user_queue_user_job'):
         spl = nm.split('_')
         rt = '_'.join(spl[1:])+':'+spl[0]
+    elif nm.endswith(':messages_count'):
+        rt = "_tmp:%s" % nm
     else:
         rt = nm
     return rt
